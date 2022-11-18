@@ -69,16 +69,13 @@
 				<td></td>
 			</tr>
 			<tr>
-				<td>DCI length (bits):</td>
-				<td colspan="2"><input name="dci_size" onkeypress="if (decode_if_enter(event)) this.select();" onfocus="this.select();" onblur="decode1();" type="text" size="2" maxlength="2" value="" id="LEN">
-				<select name="dci_justification" onchange="decode();">
-					<option selected="">Left-aligned</option>
-					<option>Right-aligned</option>
-				</select>
-				<select name="dci_read_direction" onchange="decode();">
-					<option selected="">Read from left</option>
-					<option>Read from right</option>
-				</select></td> 
+				<td>DCI format :</td>
+				<td colspan="2"><select name="dci_format"  value="" id="LEN">
+					<option value="00" selected="">Format 0_0</option>
+					<option value="10">
+						Format 1_0
+					</option>
+				</td> 
 			</tr>
 			<tr>
 			<td></td>
