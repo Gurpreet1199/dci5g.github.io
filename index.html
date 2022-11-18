@@ -70,7 +70,7 @@
 			</tr>
 			<tr>
 				<td>DCI length (bits):</td>
-				<td colspan="2"><input name="dci_size" onkeypress="if (decode_if_enter(event)) this.select();" onfocus="this.select();" onblur="decode1();" type="text" size="2" maxlength="2" value="8" id="LEN">
+				<td colspan="2"><input name="dci_size" onkeypress="if (decode_if_enter(event)) this.select();" onfocus="this.select();" onblur="decode1();" type="text" size="2" maxlength="2" value="" id="LEN">
 				<select name="dci_justification" onchange="decode();">
 					<option selected="">Left-aligned</option>
 					<option>Right-aligned</option>
@@ -93,61 +93,15 @@
 </form>
 <script>
 	var map_cmc=new Map([[100,273],[90,245],[80,217],[60,162],[50,133],[40,106],[30,78],[25,65],[20,51],[15,38],[10,24],[5,11]]);
-	function cmc_rnti(HEX,bw){
-		var str=HEX;
-		var res="";
-		for(let i=0;i<str.length;i++){
-			res+=parseInt(str[i],16).toString(2).padStart(4,'0');
-		}
-		var h1=document.createElement("h3");
-		h1.setAttribute("align","center");
-		h1.innerHTML="bit sequence : "+res;
-		document.body.appendChild(h1);
-
-		var fdsa=Math.ceil(Math.log(bw*(bw+1)/2)/Math.log(2));
-		var sstr=res.substring(1,fdsa+1);
-		var arr=[
-		["Identifier For DCI Formats ",1,res.substring(0,1),parseInt(res.substring(0,1),2).toString(10)],
-		["Frequency domain resource assignment",fdsa,sstr,parseInt(sstr,2).toString(10)],
-		["Time domain resource assignment",4,res.substring(fdsa+1,fdsa+5),parseInt(res.substring(fdsa+1,fdsa+5),2).toString(10)],
-		["VRB-TO-PRB Mapping",1,res.substring(fdsa+5,fdsa+6),parseInt(res.substring(fdsa+5,fdsa+6),2).toString(10)],
-		["Modulation and Coding scheme(MCS)",5,res.substring(fdsa+6,fdsa+11),parseInt(res.substring(fdsa+6,fdsa+11),2).toString(10)],
-		["Redundency version",2,res.substring(fdsa+11,fdsa+13),parseInt(res.substring(fdsa+11,fdsa+13),2).toString(10)],
-		["HARQ process number ",4,res.substring(fdsa+13,fdsa+17),parseInt(res.substring(fdsa+13,fdsa+17),2).toString(10)],
-		["Downlink Assignment index",2,res.substring(fdsa+17,fdsa+19),parseInt(res.substring(fdsa+17,fdsa+19),2).toString(10)],
-		["TPC command for scheduled PUCCH ",2,res.substring(fdsa+19,fdsa+21),parseInt(res.substring(fdsa+19,fdsa+21),2).toString(10)],
-		["PUCCH resource indicator ",3,res.substring(fdsa+21,fdsa+24),parseInt(res.substring(fdsa+21,fdsa+24),2).toString(10)],
-		["PDSCH-to-HARQ_feedback timing indicator",3,res.substring(fdsa+24,fdsa+27),parseInt(res.substring(fdsa+24,fdsa+27),2).toString(10)],
-	]
-		return arr;
-
-	}
-	function si_rnti(HEX){
-	var str=HEX;
-	var res="";
-	for(let i=0;i<str.length;i++){
-		res+=parseInt(str[i],16).toString(2).padStart(4,'0');
-	}
-	var fdsa=Math.ceil(Math.log(48*49/2)/Math.log(2));
-	var sstr=res.substring(0,fdsa);
-	var arr=[["Frequency domain resource assignment",fdsa,sstr,parseInt(sstr,2).toString(10)],
-	["Time domain resource assignment",4,res.substring(11,15),parseInt(res.substring(11,15),2).toString(10)],
-	["VRB-TO-PRB Mapping",1,res.substring(15,16),parseInt(res.substring(15,16),2).toString(10)],
-	["Modulation and Coding scheme(MCS)",5,res.substring(16,21),parseInt(res.substring(16,21),2).toString(10)],
-	["Redundency version",2,res.substring(21,23),parseInt(res.substring(21,23),2).toString(10)],
-	["System Information Indicator ",1,res.substring(23,24),parseInt(res.substring(23,24),2).toString(10)],
-	["Reserved Bits",15,res.substring(24,39),parseInt(res.substring(24,39),2).toString(10)]]
-	return arr;
-}
 	function tbl(arr){
 		var br=document.createElement("br");
+		br.setAttribute("id","output");
 		document.body.appendChild(br);
 		var table = document.createElement('table');
 		table.setAttribute("align","center");
 		table.setAttribute("cellspacing","2px");
-		table.setAttribute("id","img");
+		table.setAttribute("id","output");
 		table.setAttribute("border","1px dotted #999");
-		
 		var header = ['NAME ','  BITS_ALLOCATED  ', '  BIT_SEQUENCE  ', '  VALUE  ' ];
 		var tr=document.createElement('tr');
 		for(var column in header)
@@ -158,16 +112,13 @@
 			tr.appendChild(th)
 		}
 		table.appendChild(tr);
-
-		//create Table Body
 		var input = arr;
-
 		for(var row in input)
 		{
 		var tr=document.createElement('tr');
 		tr.setAttribute("style","text-align:center");
-			for(var column in input[row]){
-
+			for(var column in input[row])
+			{
 				var td=document.createElement('td');
 				td.innerHTML = input[row][column];
 				tr.appendChild(td)
@@ -175,27 +126,100 @@
 			}
 		table.appendChild(tr);
 		}
-
-		// append Table
 		document.body.appendChild(table);
-		
+}
+	function cmc_rnti(HEX,bw,LEN){
+		var str=HEX;
+		var res="";
+		for(let i=0;i<str.length;i++){
+			res+=parseInt(str[i],16).toString(2).padStart(4,'0');
+		}
+		var h1=document.createElement("h3");
+		h1.setAttribute("align","center");
+		h1.setAttribute("id","output");
+		h1.innerHTML="bit sequence : "+res;
+		document.body.appendChild(h1);
+		var fdsa=Math.ceil(Math.log(bw*(bw+1)/2)/Math.log(2));
+		var sstr=res.substring(1,fdsa+1);
+		var arr_1_0=[
+			["Identifier For DCI Formats ",1,res.substring(0,1),parseInt(res.substring(0,1),2).toString(10)],
+			["Frequency domain resource assignment",fdsa,sstr,parseInt(sstr,2).toString(10)],
+			["Time domain resource assignment",4,res.substring(fdsa+1,fdsa+5),parseInt(res.substring(fdsa+1,fdsa+5),2).toString(10)],
+			["VRB-TO-PRB Mapping",1,res.substring(fdsa+5,fdsa+6),parseInt(res.substring(fdsa+5,fdsa+6),2).toString(10)],
+			["Modulation and Coding scheme(MCS)",5,res.substring(fdsa+6,fdsa+11),parseInt(res.substring(fdsa+6,fdsa+11),2).toString(10)],
+			["Redundency version",2,res.substring(fdsa+11,fdsa+13),parseInt(res.substring(fdsa+11,fdsa+13),2).toString(10)],
+			["HARQ process number ",4,res.substring(fdsa+13,fdsa+17),parseInt(res.substring(fdsa+13,fdsa+17),2).toString(10)],
+			["Downlink Assignment index",2,res.substring(fdsa+17,fdsa+19),parseInt(res.substring(fdsa+17,fdsa+19),2).toString(10)],
+			["TPC command for scheduled PUCCH ",2,res.substring(fdsa+19,fdsa+21),parseInt(res.substring(fdsa+19,fdsa+21),2).toString(10)],
+			["PUCCH resource indicator ",3,res.substring(fdsa+21,fdsa+24),parseInt(res.substring(fdsa+21,fdsa+24),2).toString(10)],
+			["PDSCH-to-HARQ_feedback timing indicator",3,res.substring(fdsa+24,fdsa+27),parseInt(res.substring(fdsa+24,fdsa+27),2).toString(10)],
+		]
+		if(LEN=="10"){
+			return arr_1_0;
+		}
+		var total_1_0_bits=0;
+		for(let i=0;i<11;i++){
+			total_1_0_bits+=arr_1_0[i][1];
+		}
+		var total_0_0_bits=1+fdsa+4+1+5+1+2+4+2+1;
+		var pbits=total_1_0_bits-total_0_0_bits;
+		var arr_0_0=[
+			["Identifier For DCI Formats",1,res.substring(0,1),parseInt(res.substring(0,1),2).toString(10)],
+			["Frequency domain resource assignment",fdsa,sstr,parseInt(sstr,2).toString(10)],
+			["Time domain resource assignment",4,res.substring(fdsa+1,fdsa+5),parseInt(res.substring(fdsa+1,fdsa+5),2).toString(10)],
+			["Frequency Hopping Flag",1,res.substring(fdsa+5,fdsa+6),parseInt(res.substring(fdsa+5,fdsa+6),2).toString(10)],
+			["Modulation and Coding scheme(MCS)",5,res.substring(fdsa+6,fdsa+11),parseInt(res.substring(fdsa+6,fdsa+11),2).toString(10)],
+			["New Data indicator",1,res.substring(fdsa+11,fdsa+12),parseInt(res.substring(fdsa+11,fdsa+12),2).toString(10)],
+			["Redundency version",2,res.substring(fdsa+12,fdsa+14),parseInt(res.substring(fdsa+12,fdsa+14),2).toString(10)],
+			["HARQ process number ",4,res.substring(fdsa+14,fdsa+18),parseInt(res.substring(fdsa+14,fdsa+18),2).toString(10)],
+			["TPC command for scheduled PUCCH ",2,res.substring(fdsa+18,fdsa+20),parseInt(res.substring(fdsa+18,fdsa+20),2).toString(10)],
+			["Padding Bits ",pbits,res.substring(fdsa+20,fdsa+20+pbits),parseInt(res.substring(fdsa+20,fdsa+20+pbits),2).toString(10)],
+			["UL/SL indicator ",1,res.substring(fdsa+20+pbits,fdsa+21+pbits),parseInt(res.substring(fdsa+20+pbits,fdsa+21+pbits),2).toString(10)],
+		]
+		return arr_0_0;
+	}
+	function si_rnti(HEX){
+		var str=HEX;
+		var res="";
+		for(let i=0;i<str.length;i++){
+			res+=parseInt(str[i],16).toString(2).padStart(4,'0');
+		}
+		var h1=document.createElement("h3");
+		h1.setAttribute("align","center");
+		h1.setAttribute("id","output");
+		h1.innerHTML="bit sequence : "+res;
+		document.body.appendChild(h1);
+		var fdsa=Math.ceil(Math.log(48*49/2)/Math.log(2));
+		var sstr=res.substring(0,fdsa);
+		var arr=[
+			["Frequency domain resource assignment",fdsa,sstr,parseInt(sstr,2).toString(10)],
+			["Time domain resource assignment",4,res.substring(11,15),parseInt(res.substring(11,15),2).toString(10)],
+			["VRB-TO-PRB Mapping",1,res.substring(15,16),parseInt(res.substring(15,16),2).toString(10)],
+			["Modulation and Coding scheme(MCS)",5,res.substring(16,21),parseInt(res.substring(16,21),2).toString(10)],
+			["Redundency version",2,res.substring(21,23),parseInt(res.substring(21,23),2).toString(10)],
+			["System Information Indicator ",1,res.substring(23,24),parseInt(res.substring(23,24),2).toString(10)],
+			["Reserved Bits",15,res.substring(24,39),parseInt(res.substring(24,39),2).toString(10)]
+		]
+		return arr;
 }
 	function decode(){
+        while(document.getElementById("output")!=null){
+			document.getElementById("output").remove();
+		}
 		var DM=document.getElementById("DM").value;
 		var CB=document.getElementById("CB").value;
 		var TX=document.getElementById("TX").value;
 		var RNTI=document.getElementById("RNTI").value;
 		var HEX=document.getElementById("HEX").value;
 		var LEN=document.getElementById("LEN").value;
-		alert(DM+" "+CB+" "+TX+" "+RNTI+" "+HEX +" "+ LEN);
+		//alert(DM+" "+CB+" "+TX+" "+RNTI+" "+HEX +" "+ LEN);
 		if(RNTI=='si'){
 			tbl(si_rnti(HEX));
 		}
 		else if(RNTI=='c' || RNTI=='mcsc' || RNTI=='cs'){
 			var x=map_cmc.get(parseInt(CB,10));
-			tbl(cmc_rnti(HEX,x));
+			tbl(cmc_rnti(HEX,x,LEN));
 		}	
-	
 }
 </script>
 </html>
