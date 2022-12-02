@@ -75,6 +75,9 @@
 					<option value="10">
 						Format 1_0
 					</option>
+					<option value="11">
+						Format 1_1
+					</option>
 				</td> 
 			</tr>
 			<tr>
@@ -125,7 +128,7 @@
 		}
 		document.body.appendChild(table);
 }
-	function cmc_rnti(HEX,bw,LEN){
+	function cmc_rnti(HEX,bw,FMAT){
 		var str=HEX;
 		var res="";
 		for(let i=0;i<str.length;i++){
@@ -151,7 +154,7 @@
 			["PUCCH resource indicator ",3,res.substring(fdsa+21,fdsa+24),parseInt(res.substring(fdsa+21,fdsa+24),2).toString(10)],
 			["PDSCH-to-HARQ_feedback timing indicator",3,res.substring(fdsa+24,fdsa+27),parseInt(res.substring(fdsa+24,fdsa+27),2).toString(10)],
 		]
-		if(LEN=="10"){
+		if(FMAT=="10"){
 			return arr_1_0;
 		}
 		var total_1_0_bits=0;
@@ -173,7 +176,35 @@
 			["Padding Bits ",pbits,res.substring(fdsa+20,fdsa+20+pbits),parseInt(res.substring(fdsa+20,fdsa+20+pbits),2).toString(10)],
 			["UL/SL indicator ",1,res.substring(fdsa+20+pbits,fdsa+21+pbits),parseInt(res.substring(fdsa+20+pbits,fdsa+21+pbits),2).toString(10)],
 		]
-		return arr_0_0;
+		if (FMAT=="00")
+			return arr_0_0;
+		var alpha=0;
+		var arr_1_1=[
+         ["Identifier For DCI Formats",1,res.substring(0,1),parseInt(res.substring(0,1),2).toString(10)],
+         ["Carrier indicator",0,"NULL","NULL"],
+         ["Bandwidth part indicator",0,"NULL","NULL"],
+         ["Frequency domain resource assignment",fdsa,sstr,parseInt(sstr,2).toString(10)],
+         ["Time domain resource assignment",alpha,res.substring(fdsa+1,fdsa+1+alpha),parseInt(res.substring(fdsa+1,fdsa+1+alpha),2).toString(10)],
+         ["VRB-to-PRB mapping",1,res.substring(fdsa+1+alpha,fdsa+2+alpha),parseInt(res.substring(fdsa+1+alpha,fdsa+2+alpha),2).toString(10)],
+         ["PRB bundling size indicator",0,"NULL","NULL"],
+         ["Rate machine indicator",0,"NULL","NULL"],
+         ["ZP CSI-RS trigger",0,"NULL","NULL"],
+         ["Modulation and coding scheme",5,res.substring(fdsa+2+alpha,fdsa+7+alpha),parseInt(res.substring(fdsa+2+alpha,fdsa+7+alpha),2).toString(10)],
+         ["New data indicator",1,res.substring(fdsa+7+alpha,fdsa+8+alpha),parseInt(res.substring(fdsa+7+alpha,fdsa+8+alpha),2).toString(10)],
+         ["Redundancy version",2,res.substring(fdsa+8+alpha,fdsa+10+alpha),parseInt(res.substring(fdsa+8+alpha,fdsa+10+alpha),2).toString(10)],
+         ["HARQ process number ",4,res.substring(fdsa+10+alpha,fdsa+14+alpha),parseInt(res.substring(fdsa+10+alpha,fdsa+14+alpha),2).toString(10)],
+         ["Downlink assignment index",0,"NULL","NULL"],
+         ["TPC command for scheduled PUCCH ",2,res.substring(fdsa+14+alpha,fdsa+16+alpha),parseInt(res.substring(fdsa+14+alpha,fdsa+16+alpha),2).toString(10)],
+         ["PUCCH resource indicator",3,res.substring(fdsa+16+alpha,fdsa+19+alpha),parseInt(res.substring(fdsa+16+alpha,fdsa+19+alpha),2).toString(10)],
+         ["PDSCH-to-HARQ_feedback timing indicator",3,res.substring(fdsa+19+alpha,fdsa+22+alpha),parseInt(res.substring(fdsa+19+alpha,fdsa+22+alpha),2).toString(10)],
+         ["Antena port(s)",4,res.substring(fdsa+22+alpha,fdsa+26+alpha),parseInt(res.substring(fdsa+22+alpha,fdsa+26+alpha),2).toString(10)],
+         ["Transmission configuration indication",0,"NULL","NULL"],
+         ["SRS request",0,"NULL","NULL"],
+         ["CBG transmission information",0,"NULL","NULL"],
+         ["CBG flushing out information",0,"NULL","NULL"],
+         ["DMRS sequence initialization",1,res.substring(fdsa+26+alpha,fdsa+27+alpha),parseInt(res.substring(fdsa+26+alpha,fdsa+27+alpha),2).toString(10)],
+        ]
+		return arr_1_1;
 	}
 	function si_rnti(HEX){
 		var str=HEX;
@@ -208,14 +239,14 @@
 		var TX=document.getElementById("TX").value;
 		var RNTI=document.getElementById("RNTI").value;
 		var HEX=document.getElementById("HEX").value;
-		var LEN=document.getElementById("LEN").value;
+		var FMAT=document.getElementById("LEN").value;
 		//alert(DM+" "+CB+" "+TX+" "+RNTI+" "+HEX +" "+ LEN);
 		if(RNTI=='si'){
 			tbl(si_rnti(HEX));
 		}
 		else if(RNTI=='c' || RNTI=='mcsc' || RNTI=='cs'){
 			var x=map_cmc.get(parseInt(CB,10));
-			tbl(cmc_rnti(HEX,x,LEN));
+			tbl(cmc_rnti(HEX,x,FMAT));
 		}	
 }
 </script>
