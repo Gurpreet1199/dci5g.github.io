@@ -98,6 +98,7 @@
 		var a=0;
 		var b=arr[0][1];
 		for(let i=0;i<no_of_rows;i++){
+			arr[i][4]="--"
 			arr[i][2]=res.substring(a,b);
 			arr[i][3]=parseInt(arr[i][2],2).toString(10);
 			if(arr[i][1]==0){
@@ -120,7 +121,7 @@
 		table.setAttribute("cellspacing","2px");
 		table.setAttribute("id","output");
 		table.setAttribute("border","1px dotted #999");
-		var header = ['NAME ','  BITS_ALLOCATED  ', '  BIT_SEQUENCE  ', '  VALUE  ' ];
+		var header = ['NAME ','  BITS_ALLOCATED  ', '  BIT_SEQUENCE  ', '  VALUE  ', 'Rv-sequence'];
 		var tr=document.createElement('tr');
 		for(var column in header)
 		{   
@@ -152,53 +153,57 @@
 		for(let i=0;i<str.length;i++){
 			res+=parseInt(str[i],16).toString(2).padStart(4,'0');
 		}
-		var h1=document.createElement("h3");
+		var hr=document.createElement("hr");
+		document.body.appendChild(hr);
+		var h1=document.createElement("h2");
 		h1.setAttribute("align","center");
 		h1.setAttribute("id","output");
-		h1.innerHTML="bit sequence : "+res;
+		h1.innerHTML="DCI-HEX TO BIN  : "+res;
 		document.body.appendChild(h1);
+		var hr1=document.createElement("hr");
+		document.body.appendChild(hr1);
 		var fdsa=Math.ceil(Math.log(bw*(bw+1)/2)/Math.log(2));
 		if(FMAT=="11"){
 			var alpha=0;
 			var arr=[
-				["Identifier For DCI Formats",1,,],
-				["Carrier indicator",0,,],
-				["Bandwidth part indicator",0,,],
-				["Frequency domain resource assignment",fdsa,,],
-				["Time domain resource assignment",alpha,,],
-				["VRB-to-PRB mapping",0,,],
-				["PRB bundling size indicator",0,,],
-				["Rate machine indicator",0,,],
-				["ZP CSI-RS trigger",0,,],
-				["Modulation and coding scheme",5,,],
-				["New data indicator",1,,],
-				["Redundancy version",2,,],
-				["HARQ process number ",4,,],
-				["Downlink assignment index",2,,],
-				["TPC command for scheduled PUCCH ",2,,],
-				["PUCCH resource indicator",3,,],
-				["PDSCH-to-HARQ_feedback timing indicator",3,,],
-				["Antena port(s)",4,,],
-				["Transmission configuration indication",0,,],
-				["SRS request",2,,],
-				["CBG transmission information",0,,],
-				["CBG flushing out information",0,,],
-				["DMRS sequence initialization",1,,],
+				["Identifier For DCI Formats",1,,,],
+				["Carrier indicator",0,,,],
+				["Bandwidth part indicator",0,,,],
+				["Frequency domain resource assignment",fdsa,,,],
+				["Time domain resource assignment",alpha,,,],
+				["VRB-to-PRB mapping",0,,,],
+				["PRB bundling size indicator",0,,,],
+				["Rate machine indicator",0,,,],
+				["ZP CSI-RS trigger",0,,,],
+				["Modulation and coding scheme",5,,,],
+				["New data indicator",1,,,],
+				["Redundancy version",2,,,],
+				["HARQ process number ",4,,,],
+				["Downlink assignment index",2,,,],
+				["TPC command for scheduled PUCCH ",2,,,],
+				["PUCCH resource indicator",3,,,],
+				["PDSCH-to-HARQ_feedback timing indicator",3,,,],
+				["Antena port(s)",4,,,],
+				["Transmission configuration indication",0,,,],
+				["SRS request",2,,,],
+				["CBG transmission information",0,,,],
+				["CBG flushing out information",0,,,],
+				["DMRS sequence initialization",1,,,],
 			];
 			return build(arr,res);
 		}
 		var arr_1_0=[
-			["Identifier For DCI Formats ",1,,],
-			["Frequency domain resource assignment",fdsa,,],
-			["Time domain resource assignment",4,,],
-			["VRB-TO-PRB Mapping",1,,],
-			["Modulation and Coding scheme(MCS)",5,,],
-			["Redundency version",2,,],
-			["HARQ process number ",4,,],
-			["Downlink Assignment index",2,,],
-			["TPC command for scheduled PUCCH ",2,,],
-			["PUCCH resource indicator ",3,,],
-			["PDSCH-to-HARQ_feedback timing indicator",3,,],
+			["Identifier For DCI Formats ",1,,,],
+			["Frequency domain resource assignment",fdsa,,,],
+			["Time domain resource assignment",4,,,],
+			["VRB-TO-PRB Mapping",1,,,],
+			["Modulation and Coding scheme(MCS)",5,,,],
+			["Redundency version",2,,,],
+			["HARQ process number ",4,,,],
+			["Downlink Assignment index",2,,,],
+			["TPC command for scheduled PUCCH ",2,,,],
+			["PUCCH resource indicator ",3,,,],
+			["PDSCH-to-HARQ_feedback timing indicator",3,,,],
 		];		
 		if(FMAT=="10"){
 			return build(arr_1_0,res);
@@ -211,17 +216,17 @@
 		var pbits=total_1_0_bits-total_0_0_bits;
 		var arr_0_0=[
 			
-			["Identifier For DCI Formats",1,,],
-			["Frequency domain resource assignment",fdsa,,],
-			["Time domain resource assignment",4,,],
-			["Frequency Hopping Flag",1,,],
-			["Modulation and Coding scheme(MCS)",5,,],
-			["New Data indicator",1,,],
-			["Redundency version",2,,],
-			["HARQ process number ",4,,],
-			["TPC command for scheduled PUCCH ",2,,],
-			["Padding Bits ",pbits,,],
-			["UL/SL indicator ",1,,],
+			["Identifier For DCI Formats",1,,,],
+			["Frequency domain resource assignment",fdsa,,,],
+			["Time domain resource assignment",4,,,],
+			["Frequency Hopping Flag",1,,,],
+			["Modulation and Coding scheme(MCS)",5,,,],
+			["New Data indicator",1,,,],
+			["Redundency version",2,,,],
+			["HARQ process number ",4,,,],
+			["TPC command for scheduled PUCCH ",2,,,],
+			["Padding Bits ",pbits,,,],
+			["UL/SL indicator ",1,,,],
 		];
 		if (FMAT=="00"){
 			return build(arr_0_0,res);
@@ -240,13 +245,13 @@
 		document.body.appendChild(h1);
 		var fdsa=Math.ceil(Math.log(48*49/2)/Math.log(2));
 		var arr=[
-			["Frequency domain resource assignment",fdsa,,],
-			["Time domain resource assignment",4,,],
-			["VRB-TO-PRB Mapping",1,,],
-			["Modulation and Coding scheme(MCS)",5,,],
-			["Redundency version",2,,],
-			["System Information Indicator ",1,,],
-			["Reserved Bits",15,,]
+			["Frequency domain resource assignment",fdsa,,,],
+			["Time domain resource assignment",4,,,],
+			["VRB-TO-PRB Mapping",1,,,],
+			["Modulation and Coding scheme(MCS)",5,,,],
+			["Redundency version",2,,,],
+			["System Information Indicator ",1,,,],
+			["Reserved Bits",15,,,]
 		]
 		return build(arr,res);
 }
