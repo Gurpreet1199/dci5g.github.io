@@ -1,5 +1,12 @@
 <!DOCTYPE HTML>
 <html>
+	<head>
+		<title>PW_5G_DCI</title>
+		<link rel="icon" href="pw.png" type="image/png">
+	</head>
+<body bgcolor="#DC95DE" >
+	<center><img src="header.png">
+	</center>
 <form name="frm" onsubmit="decode(); return false;" action="">
 	<table class="form" cellspacing="0" align="center">
 		<tbody>
@@ -85,13 +92,14 @@
 			<td></td>
 			<td><input type="button" align="center" value="Submit" onclick="decode();"/></td>
 			</tr>
-			<tr>
+			<!--<tr>
 				<td>All possible DCI lengths (bits):<br>(Bold ones are for given setup)</td>
 				<td style="width: 1em;" colspan="2"><span id="possible_dci_lengths_div"><b><u>8</u></b>, 10, 12, 13, 14, 15, <b><u>19</u></b>, <b><u>21</u></b>, <b><u>22</u></b>, 23, 25, 27, <b><u>28</u></b>, 29, 30, <b><u>31</u></b>, 33, 34, 35, 36, 37, 38, 39, 41, 42, 43, 45, 46, 47, 48, 49, 50, 51, 53, 54, 57</span></td> 
-			</tr>
+			</tr>-->
 		</tbody>
 	</table>
 </form>
+</body>
 <script>
 	var map_cmc=new Map([[100,273],[90,245],[80,217],[60,162],[50,133],[40,106],[30,78],[25,65],[20,51],[18,48],[15,38],[10,24],[5,11]]);
 	function build(arr,res){
@@ -119,6 +127,7 @@
 		document.body.appendChild(br);
 		var table = document.createElement('table');
 		table.setAttribute("align","center");
+		table.setAttribute("bgcolor","#55D6D4")
 		table.setAttribute("cellspacing","2px");
 		table.setAttribute("id","output");
 		table.setAttribute("border","1px dotted #999");
@@ -155,6 +164,7 @@
 			res+=parseInt(str[i],16).toString(2).padStart(4,'0');
 		}
 		var hr=document.createElement("hr");
+		hr.setAttribute("id","output");
 		document.body.appendChild(hr);
 		var h1=document.createElement("h2");
 		h1.setAttribute("align","center");
@@ -162,6 +172,7 @@
 		h1.innerHTML="DCI-HEX TO BIN  : "+res;
 		document.body.appendChild(h1);
 		var hr1=document.createElement("hr");
+		hr1.setAttribute("id","output")
 		document.body.appendChild(hr1);
 		var fdsa=Math.ceil(Math.log(bw*(bw+1)/2)/Math.log(2));
 		if(FMAT=="11"){
